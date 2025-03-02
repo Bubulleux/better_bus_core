@@ -1,7 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'api_provider.dart';
 import 'bus_network.dart';
 import 'gtfs_provider.dart';
@@ -13,18 +9,15 @@ import 'models/station.dart';
 import 'models/timetable.dart';
 import 'models/traffic_info.dart';
 
-class FullProvider extends BusNetwork {
+class NetworkProvider extends BusNetwork {
   final ApiProvider api;
   final GTFSProvider gtfs;
 
   BusNetwork get preferApi => api.isAvailable() ? api : gtfs;
   BusNetwork get preferGtfs => gtfs.isAvailable() ? gtfs : api;
 
-  FullProvider({required this.api, required this.gtfs});
+  NetworkProvider({required this.api, required this.gtfs});
 
-  factory FullProvider.of(BuildContext context) {
-    return context.read<FullProvider>();
-  }
 
   @override
   Future<bool> init() async {

@@ -58,7 +58,7 @@ class ApiProvider extends BusNetwork {
     Uri uri = Uri.parse("$apiUrl/stops");
 
     // TODO: Add Cache
-    List<dynamic> body = await _sendRequest(uri, cache: null);
+    List<dynamic> body = await _sendRequest(uri);
     List<Station> output = [];
     for (Map<String, dynamic> rawStop in body) {
       output.add(JsonStation(rawStop));
@@ -181,16 +181,16 @@ class ApiProvider extends BusNetwork {
   // Old send request function, it'll work
   // TODO: Make it Better
   Future<dynamic> _sendRequest(Uri uri,
-      {needToken = true, CacheDataProvider? cache}) async {
+      {needToken = true, /*CacheDataProvider? cache*/}) async {
     int status = -1;
     int countTry = 0;
     http.Response? response;
-    if (cache != null) {
-      String? cacheData = await cache.getData();
-      if (cacheData != null) {
-        return jsonDecode(cacheData);
-      }
-    }
+    // if (cache != null) {
+    //   String? cacheData = await cache.getData();
+    //   if (cacheData != null) {
+    //     return jsonDecode(cacheData);
+    //   }
+    // }
 
     // TODO: Check Connectivity
     // if (!await ConnectivityChecker.isConnected()) {
@@ -205,9 +205,9 @@ class ApiProvider extends BusNetwork {
       if (response.statusCode == 200) {
         String body = utf8.decode(response.bodyBytes);
         dynamic output = jsonDecode(body);
-        if (cache != null) {
-          await cache.setData(body);
-        }
+        // if (cache != null) {
+        //   await cache.setData(body);
+        // }
         return output;
       }
 

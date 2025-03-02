@@ -1,6 +1,5 @@
 
-import 'package:flutter/material.dart';
-
+import 'package:pure_dart_ui/pure_dart_ui.dart';
 import '../../helper.dart';
 import '../bus_line.dart';
 
@@ -100,7 +99,7 @@ class PolyLine {
 
   PolyLine.fromJson(Map<String, dynamic> json): this(
     lineString: json["lineString"].cast<double>(),
-    lineColor: json["style"]["strokeColor"] == "gray" ? Colors.grey : colorFromHex(json["style"]["strokeColor"]),
+    lineColor: json["style"]["strokeColor"] == "gray" ? Color(0xff888888): colorFromHex(json["style"]["strokeColor"]),
     lineWidth: json["style"]["lineWidth"],
   );
 

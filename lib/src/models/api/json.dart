@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ui';
+import 'package:pure_dart_ui/pure_dart_ui.dart';
 
 import 'package:latlong2/latlong.dart';
 

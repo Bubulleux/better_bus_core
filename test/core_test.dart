@@ -45,7 +45,7 @@ void main() async {
   });
 
   group("Test Full Provider", () {
-    final provider = FullProvider(api: api, gtfs: gtfs);
+    final provider = NetworkProvider(api: api, gtfs: gtfs);
     testNetwork(provider, stationName, lineId, directionId);
   });
 
