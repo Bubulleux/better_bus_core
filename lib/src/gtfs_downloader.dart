@@ -49,6 +49,7 @@ class GTFSDataDownloader {
 
   Future<GTFSData?> loadFile() async {
     Directory gtfsDir = Directory(paths.extractDir);
+    await gtfsDir.create(recursive: true);
 
     Map<String, CSVTable> files = loadFiles(gtfsDir);
 
@@ -102,6 +103,7 @@ class GTFSDataDownloader {
     }
 
     final file = File(paths.gtfsFilePath);
+    await file.create(recursive: true);
     await file.writeAsBytes(bytes);
 
     await extractZipFile();
