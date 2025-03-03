@@ -9,3 +9,4 @@ export 'models/line_direction.dart';
 export 'models/api/route.dart';
 export 'models/line_timetable.dart';
 export 'models/stop_time.dart';
+export 'models/report.dart';

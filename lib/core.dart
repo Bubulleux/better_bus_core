@@ -5,3 +5,4 @@ export 'src/gtfs_downloader.dart';
 export 'src/cache_data_provider.dart';
 export 'src/models.dart';
 export 'src/helper.dart';
+export 'src/radar_provider.dart';
