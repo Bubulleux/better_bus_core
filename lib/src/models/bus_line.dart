@@ -1,13 +1,11 @@
-import 'package:pure_dart_ui/pure_dart_ui.dart';
-
 import 'line_direction.dart';
 
 class BusLine implements Comparable<BusLine> {
-  const BusLine(this.id, this.name, this.color, {required this.directions});
+  const BusLine(this.id, this.name, this.colorInt, {required this.directions});
 
   final String id;
   final String name;
-  final Color color;
+  final int colorInt;
 
   // TODO: Implement direction
   final Set<Direction> directions;
@@ -105,7 +103,7 @@ class BusLine implements Comparable<BusLine> {
       ...json["goDirection"].cast<String>().map((e) => Direction(e, 0)).toList(),
       ...json["backDirection"].cast<String>().map((e) => Direction(e, 1)).toList(),
     ];
-    return BusLine(json["id"], json["name"], Color(json["color"]),
+    return BusLine(json["id"], json["name"], json["color"],
         directions: directions.toSet());
   }
 
@@ -122,7 +120,7 @@ class BusLine implements Comparable<BusLine> {
     return {
       "id": id,
       "name": name,
-      "color": color.value,
+      "color": colorInt,
       "goDirection": goDirection,
       "backDirection": backDirection,
     };

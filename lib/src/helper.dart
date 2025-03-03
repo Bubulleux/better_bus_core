@@ -1,7 +1,6 @@
-import '../ui_lib.dart';
 
-Color colorFromHex(String hex) {
-  return Color(int.parse(hex.replaceAll("#", "0xff")));
+int colorFromHex(String hex) {
+  return int.parse(hex.replaceAll("#", "0xff"));
 }
 
 extension DateTimeAtMidnight on DateTime {

@@ -1,5 +1,3 @@
-
-import 'package:pure_dart_ui/pure_dart_ui.dart';
 import '../../helper.dart';
 import '../bus_line.dart';
 
@@ -99,26 +97,26 @@ class PolyLine {
 
   PolyLine.fromJson(Map<String, dynamic> json): this(
     lineString: json["lineString"].cast<double>(),
-    lineColor: json["style"]["strokeColor"] == "gray" ? Color(0xff888888): colorFromHex(json["style"]["strokeColor"]),
+    lineColor: json["style"]["strokeColor"] == "gray" ? 0xff888888: colorFromHex(json["style"]["strokeColor"]),
     lineWidth: json["style"]["lineWidth"],
   );
 
   List<double> lineString;
-  Color lineColor;
+  int lineColor;
   int lineWidth;
 }
 
 class RouteLine  extends BusLine {
-  RouteLine({required this.name, required this.destination, required this.color}):
-        super(name, destination, color, directions: {});
+  RouteLine({required this.name, required this.destination, required int colorInt}):
+        super(name, destination, colorInt, directions: {});
 
   RouteLine.fromJson(Map<String, dynamic> json): this(
     name: json["lineName"],
     destination: json["destination"],
-    color: colorFromHex(json["lineBackground"]),
+    colorInt: colorFromHex(json["lineBackground"]),
   );
 
   String name;
   String destination;
-  Color color;
+
 }

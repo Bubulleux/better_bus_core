@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:pure_dart_ui/pure_dart_ui.dart';
 
 import 'package:latlong2/latlong.dart';
 
@@ -34,7 +33,7 @@ class JsonBusLine extends BusLine {
       : super(
     json["slug"],
     json["name"],
-    Color(int.parse(json["color"].replaceAll("#", "0xff"))),
+    int.parse(json["color"].replaceAll("#", "0xff")),
     directions: {}
   );
 
