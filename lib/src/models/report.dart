@@ -7,6 +7,10 @@ class Report {
   late final Map<DateTime, bool> updates = {};
   late final int id;
 
+  Duration get lastSee => DateTime.now().difference(
+    updates.entries.lastWhere((e) => e.value).key
+  );
+
   Report.fromJson(Map<String, dynamic> json, Map<int, Station> stations) {
     station = stations[json["station"]]!;
     id = json["id"];
