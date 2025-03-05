@@ -33,12 +33,23 @@ class RadarClient {
     return output.map((e) => Report.fromJson(e, _stations)).toList(growable: false);
   }
 
-  Future<Report?> sendReport(Station station, {bool stillThere = true}) async {
+  Future<Report?> sendReport(Station station) async {
     // TODO : Maybe Post is better ?
     final uri = Uri.parse('$apiUrl/sendReport/${station.id}');
     final response = await http.get(uri);
     if(response.statusCode != 200) {
       print("Failed to send report");
+      return null;
+    }
+    return Report.fromResponse(response, _stations);
+  }
+
+  Future<Report?> updateReport(Report report, bool stillThere) async {
+
+    final uri = Uri.parse('$apiUrl/update/${report.id}/${stillThere ? 1 : 0}');
+    final response = await http.get(uri);
+    if(response.statusCode != 200) {
+      print("Failed to update report");
       return null;
     }
     String body = utf8.decode(response.bodyBytes);
