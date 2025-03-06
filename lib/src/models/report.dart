@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:http/http.dart';
 
+import '../helper.dart';
 import '../models.dart';
 
 class Report {
@@ -18,7 +18,7 @@ class Report {
     updates.entries.lastWhere((e) => e.value).key
   );
 
-  double get stillThere => clampDouble(-(5 * 60 * 1000) / updates.entries.lastWhere((e) => e.value).key.difference(
+  double get stillThere => clamp(-(5 * 60 * 1000) / updates.entries.lastWhere((e) => e.value).key.difference(
         DateTime.now()).inMilliseconds, 0, 1) * (updates.values.last ? 1 : 0.5);
 
   Report.fromJson(Map<String, dynamic> json, Map<int, Station> stations) {

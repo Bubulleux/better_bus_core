@@ -10,3 +10,4 @@ export 'models/api/route.dart';
 export 'models/line_timetable.dart';
 export 'models/stop_time.dart';
 export 'models/report.dart';
+export 'bus_network.dart';

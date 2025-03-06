@@ -8,21 +8,25 @@ class RadarClient {
   late final Uri apiUrl;
   final BusNetwork provider;
   late final Map<int, Station> _stations;
+  Future? stationLoad;
 
 
   RadarClient({required this.apiUrl, required this.provider}) {
-    provider.getStations().then((value) {
-      _stations = value.asMap().map(
-              (_, value) => MapEntry(value.id, value)
-      );
-    });
+    stationLoad = provider.getStations()
+      ..then((value) {
+        _stations = value.asMap().map(
+                (_, value) => MapEntry(value.id, value)
+        );
+        stationLoad = null;
+      });
+    print("Station load $stationLoad");
   }
 
-  RadarClient.localhost({required this.provider}) {
-    apiUrl =  Uri.parse("localhost:8080");
-  }
+  RadarClient.localhost({required BusNetwork provider})
+      : this(apiUrl: Uri.parse("http://localhost:8080"), provider: provider);
 
-  Future<List<Report>> getReports() async {
+      Future<List<Report>> getReports() async {
+    await stationLoad;
 
     final response = await http.get(Uri.parse('$apiUrl/reports'));
     if (response.statusCode != 200) {
@@ -30,14 +34,16 @@ class RadarClient {
     }
     String body = utf8.decode(response.bodyBytes);
     List<dynamic> output = jsonDecode(body);
-    return output.map((e) => Report.fromJson(e, _stations)).toList(growable: false);
+    return output.map((e) => Report.fromJson(e, _stations)).toList(
+        growable: false);
   }
 
   Future<Report?> sendReport(Station station) async {
     // TODO : Maybe Post is better ?
+    await stationLoad;
     final uri = Uri.parse('$apiUrl/sendReport/${station.id}');
     final response = await http.get(uri);
-    if(response.statusCode != 200) {
+    if (response.statusCode != 200) {
       print("Failed to send report");
       return null;
     }
@@ -45,10 +51,10 @@ class RadarClient {
   }
 
   Future<Report?> updateReport(Report report, bool stillThere) async {
-
+    await stationLoad;
     final uri = Uri.parse('$apiUrl/update/${report.id}/${stillThere ? 1 : 0}');
     final response = await http.get(uri);
-    if(response.statusCode != 200) {
+    if (response.statusCode != 200) {
       print("Failed to update report");
       return null;
     }
