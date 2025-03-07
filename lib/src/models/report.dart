@@ -18,8 +18,10 @@ class Report {
     updates.entries.lastWhere((e) => e.value).key
   );
 
-  double get stillThere => clamp(-(5 * 60 * 1000) / updates.entries.lastWhere((e) => e.value).key.difference(
-        DateTime.now()).inMilliseconds, 0, 1) * (updates.values.last ? 1 : 0.5);
+  double get stillThere => updates.containsValue(true)
+      ? clamp(-(5 * 60 * 1000) / updates.entries.lastWhere((e) => e.value).key.difference(
+        DateTime.now()).inMilliseconds, 0, 1) * (updates.values.last ? 1 : 0.5)
+  : 0;
 
   Report.fromJson(Map<String, dynamic> json, Map<int, Station> stations) {
     station = stations[json["station"]]!;
@@ -27,6 +29,11 @@ class Report {
     Map<String, dynamic> rawUpdates = json["updates"]!;
     updates.addAll(rawUpdates.map((key, value) =>
         MapEntry(DateTime.fromMillisecondsSinceEpoch(int.parse(key)), value as bool)));
+    print(id);
+    print(updates.length);
+    if (stillThere == 0) {
+      throw "Can't be empty";
+    }
   }
 
   factory Report.fromResponse(Response response, Map<int, Station> stations) {
