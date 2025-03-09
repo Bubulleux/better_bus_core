@@ -13,17 +13,20 @@ class GTFSTrip {
   late final String serviceID;
   late final int _routeID;
   late final Map<Station, GTFSStopTime> _stopTimes;
+  late final GTFSShape shape;
 
   Map<Station, GTFSStopTime> get stopTimes => _stopTimes;
 
   BusLine get line => direction.line;
 
-  GTFSTrip(Map<String, String> row, List<GTFSStopTime> stopTimes, GTFSData data) {
-    _stopTimes = { for (var e in stopTimes) data.stopsParent[e.stopId]! : e};
+  GTFSTrip(
+      Map<String, String> row, List<GTFSStopTime> stopTimes, GTFSData data) {
+    _stopTimes = {for (var e in stopTimes) data.stopsParent[e.stopId]!: e};
     _routeID = int.parse(row["route_id"]!);
     serviceID = row["service_id"]!;
     id = int.parse(row["trip_id"]!);
     direction = GTFSLineDirection.fromTripRow(row, data.routes[_routeID]!);
+    shape = data.shapes[int.parse(row["shape_id"]!)]!;
 
     data.routes[_routeID]!.addDirection(this);
   }

@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:better_bus_core/src/models/gtfs/way_point.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../station.dart';
@@ -17,14 +20,14 @@ class GTFSData {
   late final Map<int, GTFSTrip> trips;
   late final Map<int, List<GTFSStopTime>> stopTime;
 
-  //late final Map<String, GTFSShape> shapes;
+  late final Map<int, GTFSShape> shapes;
 
   GTFSData(Map<String, CSVTable> files) {
     loadStops(files["stops.txt"]!);
     loadRoutes(files["routes.txt"]!);
     calendar = GTFSCalendar.fromCSV(
         files["calendar.txt"]!, files["calendar_dates.txt"]!);
-    //loadShapes(files["shapes.txt"]!);
+    loadShapes(files["shapes.txt"]!);
     loadStopTime(files["stop_times.txt"]!);
     loadTrips(files["trips.txt"]!);
   }
@@ -32,8 +35,6 @@ class GTFSData {
   void loadStops(CSVTable table) {
     Map<int, GTFSStop> rawStations = {};
     Map<int, List<GTFSStop>> rawStops = {};
-    //Map<String, BusStop> _stopParent = {};
-    //Map<String, List<GTFSStopChild>> child = {};
 
     for (var e in table) {
       final curStop = GTFSStop.fromCSV(e);
@@ -45,19 +46,6 @@ class GTFSData {
         }
         rawStops[curStop.parent!]!.add(curStop);
       }
-      // final parent = e["parent_station"];
-      // final id = e["stop_id"];
-      // final stopChild = GTFSStopChild.fromCSV(e);
-      // _stops[id] =  stopChild;
-      // if (parent != "") {
-      //   if (!child.containsKey(parent)) {
-      //     child[parent] = [];
-      //   }
-      //   child[parent]!.add(stopChild);
-      //   continue;
-      // }
-      //
-      // _station[id] = GTFSStop.fromCSV(e);
     }
     Map<int, Station> result = {};
     Map<int, Station> newStopParent = {};
@@ -112,21 +100,17 @@ class GTFSData {
     stopTime = stopTimes;
   }
 
-// void loadShapes(CSVTable table) {
-//   Map<String, List<LatLng>> rawShapes = {};
-//
-//   for (var e in table) {
-//     String id = e["shape_id"];
-//     if (!rawShapes.containsKey(id)) {
-//       rawShapes[id] = [];
-//     }
-//     double lat = double.parse(e["shape_pt_lat"]);
-//     double long = double.parse(e["shape_pt_lon"]);
-//     rawShapes[id]!.add(LatLng(lat, long));
-//   }
-//
-//   shapes = { for (var e in rawShapes.entries) e.key : GTFSShape(e.key, e.value)};
-// }
+void loadShapes(CSVTable table) {
+  Map<int, List<GTFSWayPoint>> rawShapes = {};
+
+  for (var row in table) {
+    final wayPoint = GTFSWayPoint.fromRaw(row);
+    rawShapes[wayPoint.shape_id] ??= [];
+    rawShapes[wayPoint.shape_id]!.add(wayPoint);
+  }
+
+  shapes = { for (var e in rawShapes.entries) e.key : GTFSShape.fromWaypoint(e.value)};
+}
 }
 
 class GTFSService {
@@ -228,10 +212,17 @@ class GTFSCalendar {
 }
 
 class GTFSShape {
-  final String shapeId;
+  final int shapeId;
   final List<LatLng> wayPoints;
 
   GTFSShape(this.shapeId, this.wayPoints);
+
+  factory GTFSShape.fromWaypoint(List<GTFSWayPoint> wayPoints) {
+    wayPoints.sort();
+    final shapeId = wayPoints.first.shape_id;
+    assert(wayPoints.every((e) => e.shape_id == shapeId), "Not the same shape");
+    return GTFSShape(shapeId, wayPoints.map((e) => e.position).toList());
+  }
 }
 
 Duration parseDuration(String time) {
