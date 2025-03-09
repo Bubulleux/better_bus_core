@@ -29,11 +29,6 @@ class Report {
     Map<String, dynamic> rawUpdates = json["updates"]!;
     updates.addAll(rawUpdates.map((key, value) =>
         MapEntry(DateTime.fromMillisecondsSinceEpoch(int.parse(key)), value as bool)));
-    print(id);
-    print(updates.length);
-    if (stillThere == 0) {
-      throw "Can't be empty";
-    }
   }
 
   factory Report.fromResponse(Response response, Map<int, Station> stations) {
