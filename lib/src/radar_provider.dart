@@ -10,13 +10,10 @@ class RadarClient {
   late final Map<int, Station> _stations;
   Future? stationLoad;
 
-
   RadarClient({required this.apiUrl, required this.provider}) {
     stationLoad = provider.getStations()
       ..then((value) {
-        _stations = value.asMap().map(
-                (_, value) => MapEntry(value.id, value)
-        );
+        _stations = value.asMap().map((_, value) => MapEntry(value.id, value));
         stationLoad = null;
       });
     print("Station load $stationLoad");
@@ -25,7 +22,13 @@ class RadarClient {
   RadarClient.localhost({required BusNetwork provider})
       : this(apiUrl: Uri.parse("http://localhost:8080"), provider: provider);
 
-      Future<List<Report>> getReports() async {
+  RadarClient.production({required BusNetwork provider})
+      : this(
+            apiUrl:
+                Uri.parse("https://better-bus-server-fthea.ondigitalocean.app"),
+            provider: provider);
+
+  Future<List<Report>> getReports() async {
     await stationLoad;
 
     final response = await http.get(Uri.parse('$apiUrl/reports'));
@@ -34,8 +37,9 @@ class RadarClient {
     }
     String body = utf8.decode(response.bodyBytes);
     List<dynamic> output = jsonDecode(body);
-    return output.map((e) => Report.fromJson(e, _stations)).toList(
-        growable: false);
+    return output
+        .map((e) => Report.fromJson(e, _stations))
+        .toList(growable: false);
   }
 
   Future<Report?> sendReport(Station station) async {
