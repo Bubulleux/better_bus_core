@@ -10,23 +10,23 @@ class RadarClient {
   late final Map<int, Station> _stations;
   Future? stationLoad;
 
+  static final localhostEndPoint = Uri.parse("http://192.168.188.242:8080");
+  static final productionEndpoint =
+      Uri.parse("https://better-bus-server-fthea.ondigitalocean.app");
+
   RadarClient({required this.apiUrl, required this.provider}) {
     stationLoad = provider.getStations()
       ..then((value) {
         _stations = value.asMap().map((_, value) => MapEntry(value.id, value));
         stationLoad = null;
       });
-    print("Station load $stationLoad");
   }
 
   RadarClient.localhost({required BusNetwork provider})
-      : this(apiUrl: Uri.parse("http://localhost:8080"), provider: provider);
+      : this(apiUrl: localhostEndPoint, provider: provider);
 
   RadarClient.production({required BusNetwork provider})
-      : this(
-            apiUrl:
-                Uri.parse("https://better-bus-server-fthea.ondigitalocean.app"),
-            provider: provider);
+      : this(apiUrl: productionEndpoint, provider: provider);
 
   Future<List<Report>> getReports() async {
     await stationLoad;
