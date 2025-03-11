@@ -1,11 +1,15 @@
+import 'package:better_bus_core/src/models/gtfs/gtfs_data.dart';
+import 'package:better_bus_core/src/models/gtfs/way_point.dart';
+
 import '../models.dart';
 
 class BusTrip extends LineDirected {
-  BusTrip(super.direction, {required this.stopTimes, required this.id});
+  BusTrip(super.direction, {required this.stopTimes, required this.shape, required this.id});
 
 
   final int id;
   final List<TripStop> stopTimes;
+  final GTFSShape shape;
 
   Iterable<TripStop> from(Station station) {
     return stopTimes.skipWhile((e) => e.station != station);

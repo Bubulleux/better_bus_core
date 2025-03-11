@@ -1,8 +1,8 @@
 import 'package:latlong2/latlong.dart';
 
-import '../positioned.dart';
+import '../location.dart';
 
-class GTFSWayPoint extends Positioned implements Comparable<GTFSWayPoint> {
+class GTFSWayPoint extends Location implements Comparable<GTFSWayPoint> {
   final int shape_id;
   final int index;
 

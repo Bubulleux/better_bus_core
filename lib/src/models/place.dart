@@ -1,11 +1,11 @@
+import 'package:better_bus_core/core.dart';
 import 'package:latlong2/latlong.dart';
 
-class Place {
-  const Place(this.name, this.position, {this.address});
+class Place extends Location {
+  const Place(this.name, super.position, {this.address});
 
   final String name;
   final String? address;
-  final LatLng position;
 
   Place.fromJson(Map<String, dynamic> json)
       : this(json['name'], LatLng(json['lat'], json['long']),

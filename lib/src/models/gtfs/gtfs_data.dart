@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:better_bus_core/src/models/gtfs/way_point.dart';
 import 'package:latlong2/latlong.dart';
 
