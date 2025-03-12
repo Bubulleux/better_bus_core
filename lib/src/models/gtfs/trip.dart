@@ -1,3 +1,5 @@
+import 'package:better_bus_core/core.dart';
+
 import '../bus_line.dart';
 import '../bus_trip.dart';
 import '../line_direction.dart';
@@ -33,12 +35,14 @@ class GTFSTrip {
 
   BusTrip at(DateTime from) {
     final date = from.atMidnight();
+    final times =  stopTimes.entries
+        .map((e) => TripStop(date.add(e.value.arrival), e.key, e.value.distanceTravel))
+        .toList();
     return BusTrip(direction,
         id: id,
-        shape: shape,
-        stopTimes: stopTimes.entries
-            .map((e) => TripStop(date.add(e.value.arrival), e.key))
-            .toList());
+        shape: LineShape(shape, times),
+        stopTimes: times
+    );
   }
 
   @override

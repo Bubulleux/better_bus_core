@@ -9,7 +9,7 @@ class BusTrip extends LineDirected {
 
   final int id;
   final List<TripStop> stopTimes;
-  final GTFSShape shape;
+  final LineShape shape;
 
   Iterable<TripStop> from(Station station) {
     return stopTimes.skipWhile((e) => e.station != station);
@@ -27,14 +27,18 @@ class BusTrip extends LineDirected {
   bool operator ==(Object other) {
     return other is BusTrip && hashCode == other.hashCode;
   }
+
+  bool isPassingBy(Station station) {
+    return stopTimes.any((e) => e.station == station);
+  }
 }
 
 class TripStop {
-  TripStop(this.time, this.station);
+  TripStop(this.time, this.station, this.travelDist);
 
-  TripStop.fromMapEntry(MapEntry<DateTime, Station> entry)
-      : this(entry.key, entry.value);
+
 
   final DateTime time;
   final Station station;
+  final int travelDist;
 }
