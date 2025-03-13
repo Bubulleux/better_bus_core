@@ -36,7 +36,7 @@ class GTFSTrip {
   BusTrip at(DateTime from) {
     final date = from.atMidnight();
     final times =  stopTimes.entries
-        .map((e) => TripStop(date.add(e.value.arrival), e.key, e.value.distanceTravel))
+        .map((e) => TripStop(e.key, e.value.distanceTravel, time: date.add(e.value.arrival)))
         .toList();
     return BusTrip(direction,
         id: id,

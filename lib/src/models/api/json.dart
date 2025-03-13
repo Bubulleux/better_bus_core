@@ -17,7 +17,7 @@ class JsonStation extends Station {
         super(
           json["name"],
           getIdFromApi(json["stop_id"]),
-          LatLng(json["lat"], json["lng"]),
+          position: LatLng(json["lat"], json["lng"]),
         stops: {}
       );
 

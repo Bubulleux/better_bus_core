@@ -6,13 +6,13 @@ class GTFSWayPoint extends Location implements Comparable<GTFSWayPoint> {
   final int shape_id;
   final int index;
 
-  GTFSWayPoint(this.shape_id, this.index, super.position);
+  GTFSWayPoint(this.shape_id, this.index, {required super.position});
 
   GTFSWayPoint.fromRaw(Map<String, String> row)
       : this(
           int.parse(row["shape_id"]!),
           int.parse(row["shape_pt_sequence"]!),
-          LatLng(double.parse(row["shape_pt_lat"]!),
+          position: LatLng(double.parse(row["shape_pt_lat"]!),
               double.parse(row["shape_pt_lon"]!)),
         );
 
