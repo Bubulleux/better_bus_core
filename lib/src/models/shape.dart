@@ -16,7 +16,7 @@ class LineShape {
       double newDst = 0;
       do {
         newDst = wayPoints.last.position.distance(timesI.current.station.position);
-        wayPoints.add(Location(shapeI.current));
+        wayPoints.add(Location(position: shapeI.current));
       } while (shapeI.moveNext() && (newDst < dst || dst < 0.1));
       wayPoints.add(timesI.current.station);
     }

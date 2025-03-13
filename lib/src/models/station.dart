@@ -3,7 +3,7 @@ import 'package:latlong2/latlong.dart';
 import 'place.dart';
 
 class Station extends Place {
-  const Station(super.name, this.id, super.postion, {required this.stops});
+  const Station(super.name, this.id, {required super.position, required this.stops});
 
   final int id;
   final Map<int, LatLng> stops;
@@ -26,7 +26,7 @@ class Station extends Place {
       : this(
           json["name"],
           json["id"],
-          LatLng(json["lat"], json["long"]),
+          position: LatLng(json["lat"], json["long"]),
           stops: {},
         );
 

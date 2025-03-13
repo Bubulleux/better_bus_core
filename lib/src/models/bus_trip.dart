@@ -1,5 +1,6 @@
 import 'package:better_bus_core/src/models/gtfs/gtfs_data.dart';
 import 'package:better_bus_core/src/models/gtfs/way_point.dart';
+import 'package:better_bus_core/src/models/waypoint.dart';
 
 import '../models.dart';
 
@@ -33,12 +34,9 @@ class BusTrip extends LineDirected {
   }
 }
 
-class TripStop {
-  TripStop(this.time, this.station, this.travelDist);
+class TripStop extends WayPoint {
+  TripStop(this.station, this.travelDist, {required super.time}): super(position: station.position);
 
-
-
-  final DateTime time;
   final Station station;
   final int travelDist;
 }
