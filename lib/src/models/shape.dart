@@ -6,42 +6,49 @@ import '../models.dart';
 import '../helper.dart';
 
 class LineShape {
-  late final List<WayPoint> wayPoints;
+  final List<WayPoint> wayPoints;
 
-  LineShape(GTFSShape shape, List<TripStop> stopTimes) {
-    wayPoints = shape.wayPoints.map((e) => WayPoint(position: e, time: DateTime.now()
-    )).toList();
-    // final timeI = stopTimes.iterator;
-    // TripStop? lastTime = null;
-    //
-    // wayPoints = [];
-    // int lastIndex = 0;
-    //
-    // while (timeI.moveNext()) {
-    //   final time = timeI.current;
-    //   final path = untilGoseAway(time.station.position, shape.wayPoints);
-    //
-    //   if (lastTime == null) {
-    //     wayPoints.add(time);
-    //     lastTime = time;
-    //     continue;
-    //   }
-    //
-    //   final pathDst = pathDist(path);
-    //   final dt = time.time.difference(lastTime.time);
-    //   var currentDst = 0.0;
-    //   var lstPt = wayPoints.last.position;
-    //   for (var point in path) {
-    //     currentDst += lstPt.distance(point);
-    //     wayPoints.add(WayPoint(
-    //       position: point,
-    //       time: lastTime.time.add(dt * (currentDst / pathDst)),
-    //     ));
-    //   }
-    //   wayPoints.add(time);
-    //   lastTime = time;
-    // }
-  }
+  LineShape(this.wayPoints);
+
+  LineShape.fromGTFS(GTFSShape shape, List<TripStop> stopTimes)
+      : this(shape.wayPoints
+            .map((e) => WayPoint(position: e, time: DateTime.now()))
+            .toList());
+
+  //       {
+  // wayPoints =
+  // )).toList();
+  // // final timeI = stopTimes.iterator;
+  // TripStop? lastTime = null;
+  //
+  // wayPoints = [];
+  // int lastIndex = 0;
+  //
+  // while (timeI.moveNext()) {
+  //   final time = timeI.current;
+  //   final path = untilGoseAway(time.station.position, shape.wayPoints);
+  //
+  //   if (lastTime == null) {
+  //     wayPoints.add(time);
+  //     lastTime = time;
+  //     continue;
+  //   }
+  //
+  //   final pathDst = pathDist(path);
+  //   final dt = time.time.difference(lastTime.time);
+  //   var currentDst = 0.0;
+  //   var lstPt = wayPoints.last.position;
+  //   for (var point in path) {
+  //     currentDst += lstPt.distance(point);
+  //     wayPoints.add(WayPoint(
+  //       position: point,
+  //       time: lastTime.time.add(dt * (currentDst / pathDst)),
+  //     ));
+  //   }
+  //   wayPoints.add(time);
+  //   lastTime = time;
+  // }
+  // }
 
   Iterable<LatLng> untilGoseAway(LatLng pos, List<LatLng> path) sync* {
     double lastDst = double.infinity;

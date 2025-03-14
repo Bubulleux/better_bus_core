@@ -40,7 +40,7 @@ class GTFSTrip {
         .toList();
     return BusTrip(direction,
         id: id,
-        shape: LineShape(shape, times),
+        shape: LineShape.fromGTFS(shape, times),
         stopTimes: times
     );
   }

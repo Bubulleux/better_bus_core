@@ -1,3 +1,7 @@
+import 'package:better_bus_core/core.dart';
+import 'package:better_bus_core/src/models/waypoint.dart';
+import 'package:latlong2/latlong.dart';
+
 import '../../helper.dart';
 import '../bus_line.dart';
 
@@ -7,12 +11,21 @@ class VitalisRoute {
   VitalisRoute.fromJson(Map<String, dynamic> json): this(
     id: json["id"],
     itinerary: json["itinerary"].map((e) => RoutePassage.fromJson(e)).toList().cast<RoutePassage>(),
-    polyLines: json["polylines"].map((e) => PolyLine.fromJson(e)).toList().cast<PolyLine>(),
+    polyLines: json["polylines"].map((e) => shapeFromJson(e)).toList().cast<LineShape>(),
   );
+
+  static LineShape shapeFromJson(Map<String, dynamic> json) {
+    List<WayPoint> wayPoints = [];
+    List<double> line = json["lineString"].cast<double>();
+    for(var i = 0; i < line.length; i+=2) {
+      wayPoints.add(WayPoint(position: LatLng(line[i], line[i+1])));
+    }
+    return LineShape(wayPoints);
+  }
 
   String id;
   List<RoutePassage> itinerary;
-  List<PolyLine> polyLines;
+  List<LineShape> polyLines;
 
   Duration get timeTravel  {
     Duration sum = const Duration();
@@ -92,19 +105,7 @@ class RoutePassage {
   String type;
 }
 
-class PolyLine {
-  PolyLine({required this.lineString, required this.lineColor, required this.lineWidth});
 
-  PolyLine.fromJson(Map<String, dynamic> json): this(
-    lineString: json["lineString"].cast<double>(),
-    lineColor: json["style"]["strokeColor"] == "gray" ? 0xff888888: colorFromHex(json["style"]["strokeColor"]),
-    lineWidth: json["style"]["lineWidth"],
-  );
-
-  List<double> lineString;
-  int lineColor;
-  int lineWidth;
-}
 
 class RouteLine  extends BusLine {
   RouteLine({required this.name, required this.destination, required int colorInt}):
