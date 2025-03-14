@@ -9,43 +9,65 @@ class LineShape {
   late final List<WayPoint> wayPoints;
 
   LineShape(GTFSShape shape, List<TripStop> stopTimes) {
-    final shapeI = shape.wayPoints.iterator;
-    final timesI = stopTimes.iterator;
-    print(stopTimes);
-    wayPoints = [];
-    return;
-    wayPoints = [timesI.current];
+    wayPoints = shape.wayPoints.map((e) => WayPoint(position: e, time: DateTime.now()
+    )).toList();
+    // final timeI = stopTimes.iterator;
+    // TripStop? lastTime = null;
+    //
+    // wayPoints = [];
+    // int lastIndex = 0;
+    //
+    // while (timeI.moveNext()) {
+    //   final time = timeI.current;
+    //   final path = untilGoseAway(time.station.position, shape.wayPoints);
+    //
+    //   if (lastTime == null) {
+    //     wayPoints.add(time);
+    //     lastTime = time;
+    //     continue;
+    //   }
+    //
+    //   final pathDst = pathDist(path);
+    //   final dt = time.time.difference(lastTime.time);
+    //   var currentDst = 0.0;
+    //   var lstPt = wayPoints.last.position;
+    //   for (var point in path) {
+    //     currentDst += lstPt.distance(point);
+    //     wayPoints.add(WayPoint(
+    //       position: point,
+    //       time: lastTime.time.add(dt * (currentDst / pathDst)),
+    //     ));
+    //   }
+    //   wayPoints.add(time);
+    //   lastTime = time;
+    // }
+  }
 
-    while (timesI.moveNext()) {
-      final next = timesI.current;
-      final previous = wayPoints.last;
-      double totalDst = 0;
-      double endDst = double.infinity;
-      var lastDst = double.infinity;
-      final path = <LatLng>[];
-      do {
-        final waypoint = shapeI.current;
-         lastDst = endDst;
-         endDst = next.position.distance(waypoint);
-         if (path.isNotEmpty) {
-           totalDst += path.last.distance(waypoint);
-         }
-         path.add(waypoint);
+  Iterable<LatLng> untilGoseAway(LatLng pos, List<LatLng> path) sync* {
+    double lastDst = double.infinity;
+    final iterator = path.iterator;
+    if (!iterator.moveNext()) return;
+    LatLng lastPoint = iterator.current;
 
-      } while (shapeI.moveNext() && (lastDst > endDst || endDst > 0.1));
-
-      WayPoint last = wayPoints.last;
-      Duration dt = next.time.difference(previous.time);
-      wayPoints.addAll(
-        path.map((e) {
-          final dst = last.position.distance(e);
-          last = WayPoint(position: e,
-              time: previous.time.add(dt * (dst / totalDst))
-          );
-          return last;
-        })
-      );
-      wayPoints.add(next);
+    while (iterator.moveNext()) {
+      final point = iterator.current;
+      final newDst = pos.distance(point);
+      if (lastDst < newDst && newDst < 0.2) break;
+      yield lastPoint;
+      lastPoint = point;
     }
+    yield lastPoint;
+  }
+
+  double pathDist(Iterable<LatLng> path) {
+    double dst = 0;
+    LatLng? lastPoint;
+    for (var point in path) {
+      if (lastPoint != null) {
+        dst += lastPoint.distance(point);
+      }
+      lastPoint = point;
+    }
+    return dst;
   }
 }
