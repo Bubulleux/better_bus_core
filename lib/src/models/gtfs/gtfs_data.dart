@@ -103,8 +103,8 @@ void loadShapes(CSVTable table) {
 
   for (var row in table) {
     final wayPoint = GTFSWayPoint.fromRaw(row);
-    rawShapes[wayPoint.shape_id] ??= [];
-    rawShapes[wayPoint.shape_id]!.add(wayPoint);
+    rawShapes[wayPoint.shapeId] ??= [];
+    rawShapes[wayPoint.shapeId]!.add(wayPoint);
   }
 
   shapes = { for (var e in rawShapes.entries) e.key : GTFSShape.fromWaypoint(e.value)};
@@ -217,8 +217,8 @@ class GTFSShape {
 
   factory GTFSShape.fromWaypoint(List<GTFSWayPoint> wayPoints) {
     wayPoints.sort();
-    final shapeId = wayPoints.first.shape_id;
-    assert(wayPoints.every((e) => e.shape_id == shapeId), "Not the same shape");
+    final shapeId = wayPoints.first.shapeId;
+    assert(wayPoints.every((e) => e.shapeId == shapeId), "Not the same shape");
     return GTFSShape(shapeId, wayPoints.map((e) => e.position).toList());
   }
 }

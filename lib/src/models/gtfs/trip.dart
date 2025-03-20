@@ -1,13 +1,8 @@
 import 'package:better_bus_core/core.dart';
 
-import '../bus_line.dart';
-import '../bus_trip.dart';
-import '../line_direction.dart';
-import '../station.dart';
 import 'direction.dart';
 import 'gtfs_data.dart';
 import 'stop_time.dart';
-import '../../helper.dart';
 
 class GTFSTrip {
   late final LineDirection direction;

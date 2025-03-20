@@ -3,10 +3,10 @@ import 'package:latlong2/latlong.dart';
 import '../location.dart';
 
 class GTFSWayPoint extends Location implements Comparable<GTFSWayPoint> {
-  final int shape_id;
+  final int shapeId;
   final int index;
 
-  GTFSWayPoint(this.shape_id, this.index, {required super.position});
+  GTFSWayPoint(this.shapeId, this.index, {required super.position});
 
   GTFSWayPoint.fromRaw(Map<String, String> row)
       : this(

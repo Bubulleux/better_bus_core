@@ -2,8 +2,6 @@ import 'package:better_bus_core/core.dart';
 import 'package:better_bus_core/src/models/waypoint.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../helper.dart';
-import '../bus_line.dart';
 
 class VitalisRoute {
   VitalisRoute({required this.id, required this.itinerary, required this.polyLines});

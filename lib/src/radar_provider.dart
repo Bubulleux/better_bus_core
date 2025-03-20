@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:better_bus_core/core.dart';
-import 'package:better_bus_core/src/bus_network.dart';
 import 'package:http/http.dart' as http;
 
 class RadarClient {
@@ -33,7 +32,8 @@ class RadarClient {
 
     final response = await http.get(Uri.parse('$apiUrl/reports'));
     if (response.statusCode != 200) {
-      throw Exception("Failed to get reports");
+      print("Failed to get reports");
+      return [];
     }
     String body = utf8.decode(response.bodyBytes);
     List<dynamic> output = jsonDecode(body);

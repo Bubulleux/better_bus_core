@@ -35,7 +35,7 @@ class GTFSTimeTable extends Timetable {
     int i = validTrip
         .lastIndexWhere((e) => testDuration >= e.stopTimes[station]!.arrival);
 
-    assert(i >= 0);
+    if (i == -1) return time;
 
     Duration curDiff = testDuration - validTrip[i].stopTimes[station]!.arrival;
     if (validTrip.length != i + 1 &&

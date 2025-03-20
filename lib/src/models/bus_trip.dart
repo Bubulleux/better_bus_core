@@ -1,5 +1,3 @@
-import 'package:better_bus_core/src/models/gtfs/gtfs_data.dart';
-import 'package:better_bus_core/src/models/gtfs/way_point.dart';
 import 'package:better_bus_core/src/models/waypoint.dart';
 
 import '../models.dart';
