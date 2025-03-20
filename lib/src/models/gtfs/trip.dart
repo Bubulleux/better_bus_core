@@ -35,14 +35,12 @@ class GTFSTrip {
 
   BusTrip at(DateTime from) {
     final date = from.atMidnight();
-    final times =  stopTimes.entries
-        .map((e) => TripStop(e.key, e.value.distanceTravel, time: date.add(e.value.arrival)))
+    final times = stopTimes.entries
+        .map((e) => TripStop(e.key, e.value.distanceTravel,
+            time: date.add(e.value.arrival)))
         .toList();
     return BusTrip(direction,
-        id: id,
-        shape: LineShape.fromGTFS(shape, times),
-        stopTimes: times
-    );
+        id: id, shape: LineShape.fromGTFS(shape, times), stopTimes: times);
   }
 
   @override

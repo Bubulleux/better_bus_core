@@ -17,8 +17,10 @@ class VitalisRoute {
   static LineShape shapeFromJson(Map<String, dynamic> json) {
     List<WayPoint> wayPoints = [];
     List<double> line = json["lineString"].cast<double>();
+    // TODO: z Do it another way...
+    final t = DateTime.now();
     for(var i = 0; i < line.length; i+=2) {
-      wayPoints.add(WayPoint(position: LatLng(line[i], line[i+1])));
+      wayPoints.add(WayPoint(position: LatLng(line[i], line[i+1]), time: t));
     }
     return LineShape(wayPoints);
   }
