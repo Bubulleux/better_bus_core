@@ -37,4 +37,7 @@ class Report {
     Map<String, dynamic> output = jsonDecode(body);
     return Report.fromJson(output, stations);
   }
+
+  @override
+  int get hashCode => station.hashCode ^ id.hashCode ^ Object.hashAll(updates.keys);
 }
