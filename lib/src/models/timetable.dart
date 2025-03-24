@@ -33,6 +33,7 @@ class ConstTimetable  extends Timetable{
   @override
   Iterable<StopTime> getNext({DateTime? from}) {
     DateTime start = from ?? DateTime.now();
+    print(stopTimes.length);
     var output =  stopTimes.where((stopTime) =>
       stopTime.time.isAfter(start)).toList();
 

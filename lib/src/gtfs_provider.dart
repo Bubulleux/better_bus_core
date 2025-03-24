@@ -6,6 +6,7 @@ import 'models/bus_line.dart';
 import 'models/gtfs/gtfs_data.dart';
 import 'models/gtfs/gtfs_path.dart';
 import 'models/gtfs/timetable.dart';
+import 'models/gtfs/trip.dart';
 import 'models/line_direction.dart';
 import 'models/line_timetable.dart';
 import 'models/station.dart';
@@ -77,11 +78,21 @@ class GTFSProvider extends BusNetwork {
     DateTime now = DateTime.now();
 
     Set<String> validServices = data.calendar.getEnablesServices(now);
+    print(validServices);
 
     final trips =
         data.trips.values.where((e) => validServices.contains(e.serviceID));
 
-    return Future.value(GTFSTimeTable(station, now, trips));
+    final timesHash = <int>{};
+    final output = <GTFSTrip>[];
+    for (var e in trips) {
+      final hash = e.direction.hashCode ^ e.stopTimes.values.first.arrival.hashCode;
+      if (timesHash.contains(hash)) continue;
+      output.add(e);
+      timesHash.add(hash);
+    }
+
+    return Future.value(GTFSTimeTable(station, now, output));
   }
 
   @override

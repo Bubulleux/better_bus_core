@@ -13,13 +13,18 @@ class MatchingTimetable extends Timetable {
   @override
   Iterable<StopTime> getNext({DateTime? from}) {
     from ??= DateTime.now();
+    // return gtfsTimeTable.getNext(from: from);
     List<StopTime> apiTimes = realTime.getNext(from: from).toList();
-    final result = apiTimes.map((e) => gtfsTimeTable.matchTime(e)).toList();
+    final result = apiTimes.where((e) => e.isRealTime).map((e) => gtfsTimeTable.matchTime(e)).toList();
     final Set<int> matchedTrips = result.map((e) => e.trip?.id ?? -1).toSet();
+    print(apiTimes.length);
+    print(result.length);
+    print(matchedTrips.length);
     
     result.addAll(gtfsTimeTable.getNext(from: from)
         .where((e) => !matchedTrips.contains(e.trip?.id))
     );
+    print(result.length);
 
     result.sort();
     return result;
