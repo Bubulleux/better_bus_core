@@ -70,6 +70,8 @@ class GTFSProvider extends BusNetwork {
         .toSet()
         .toList(growable: false);
 
+    result.sort();
+
     return Future.value(result);
   }
 
