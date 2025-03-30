@@ -21,8 +21,14 @@ class NetworkProvider extends BusNetwork {
 
   @override
   Future<bool> init() async {
+    final superInit = super.init();
     final result = await Future.wait([api.init(), gtfs.init()]);
-    return result[0] && result[1];
+    if (!result[0] || !result[1]) {
+      print("Failed to init all providers");
+      print("API PROVIDER: ${result[0]}");
+      print("GTFS PROVIDER: ${result[1]}");
+    }
+    return (result[0] || result[1]) && await superInit;
   }
 
   @override

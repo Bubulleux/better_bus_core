@@ -25,6 +25,7 @@ class GTFSProvider extends BusNetwork {
 
   @override
   Future<bool> init() async {
+    final superInit = super.init();
     bool pathInit = await provider.paths.init();
     if (!pathInit) {
       // TODO: Make it better, test it
@@ -39,7 +40,7 @@ class GTFSProvider extends BusNetwork {
       return false;
     }
     _data = providerData;
-    return true;
+    return superInit;
   }
 
   @override
@@ -55,7 +56,7 @@ class GTFSProvider extends BusNetwork {
   @override
   Future<Map<String, BusLine>> getAllLines() {
     return Future.value(
-        {for (var e in _data!.routes.entries) e.value.id: e.value});
+        {for (var e in data.routes.entries) e.value.id: e.value});
   }
 
   @override
