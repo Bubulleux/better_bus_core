@@ -1,3 +1,5 @@
+import 'package:better_bus_core/core.dart';
+
 import 'api_provider.dart';
 import 'bus_network.dart';
 import 'gtfs_provider.dart';
@@ -53,7 +55,12 @@ class NetworkProvider extends BusNetwork {
 
 
   @override
-  Future<Timetable> getTimetable(Station station) async {
+  Future<Timetable> getTimetable(Station station, {DateTime? time}) async {
+    if (time != null && time.atMidnight() != DateTime.now().atMidnight()) {
+      assert(gtfs.isAvailable());
+      return gtfs.getTimetable(station, time: time);
+    }
+    time ??= DateTime.now();
     if (!gtfs.isAvailable() || !api.isAvailable()) {
       return preferApi.getTimetable(station);
     }

@@ -77,11 +77,10 @@ class GTFSProvider extends BusNetwork {
   }
 
   @override
-  Future<GTFSTimeTable> getTimetable(Station station) {
-    DateTime now = DateTime.now();
+  Future<GTFSTimeTable> getTimetable(Station station, {DateTime? time}) {
+    DateTime now = time ?? DateTime.now();
 
     Set<String> validServices = data.calendar.getEnablesServices(now);
-    print(validServices);
 
     final trips =
         data.trips.values.where((e) => validServices.contains(e.serviceID));

@@ -30,6 +30,23 @@ class BusTrip extends LineDirected {
   bool isPassingBy(Station station) {
     return stopTimes.any((e) => e.station == station);
   }
+
+  bool followDirection(Station start, Station end) {
+    bool inWay = false;
+    assert(start != end);
+    for (var time in stopTimes) {
+      final stop = time.station;
+      if (stop == start) {
+        if (inWay) return false;
+        inWay = true;
+      }
+      if (stop == end) {
+        if (!inWay) return false;
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 class TripStop extends WayPoint {

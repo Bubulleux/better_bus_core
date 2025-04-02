@@ -132,7 +132,6 @@ class ApiProvider extends BusNetwork {
     });
 
     Map<String, dynamic> boarding = (await _sendRequest(uri))['boarding_ids']!;
-    print(boarding);
     uri = Uri.parse(
         "https://releases-uxb3m2jh5q-ew.a.run.app/gtfs/Horaire/getHoraire.json");
     uri = uri.replace(queryParameters: {
@@ -143,7 +142,6 @@ class ApiProvider extends BusNetwork {
       "stop_id": boarding[direction == 0 ? "aller" : "retour"].toString(),
       "networks": "[1]",
     });
-    print(uri);
 
     Map<String, dynamic> body = await _sendRequest(uri);
     JsonLineTimetable output = JsonLineTimetable(body, station, line, date);

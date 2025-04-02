@@ -17,7 +17,7 @@ class GTFSTimeTable extends Timetable {
   @override
   Iterable<StopTime> getNext({DateTime? from}) {
     from ??= DateTime.now();
-    Duration fromDuration = from.difference(DateTime.now().atMidnight());
+    Duration fromDuration = from.difference(date.atMidnight());
 
     return _trips
         .where((e) => e.stopTimes[station]!.arrival >= fromDuration)
