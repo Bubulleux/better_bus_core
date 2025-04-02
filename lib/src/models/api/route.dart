@@ -27,6 +27,9 @@ class VitalisRoute {
   List<RoutePassage> itinerary;
   List<LineShape> polyLines;
 
+  DateTime get startTime => itinerary.first.startTime.toLocal();
+  DateTime get arrivalTime => itinerary.last.endTime.toLocal();
+
   Duration get timeTravel  {
     Duration sum = const Duration();
     for(RoutePassage passage in itinerary) {
