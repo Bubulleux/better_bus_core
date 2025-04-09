@@ -45,12 +45,11 @@ class ApiProvider extends BusNetwork {
     if (token != null) {
       return true;
     }
-    final superInit = super.init();
     final success = await _getToken();
     if (!success) {
       throw "Failed to get api token";
     }
-    return superInit;
+    return true;
   }
 
   @override

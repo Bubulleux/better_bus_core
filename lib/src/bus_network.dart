@@ -1,29 +1,17 @@
-import 'dart:io';
-
 import 'models/bus_line.dart';
 import 'models/line_timetable.dart';
 import 'models/station.dart';
 import 'models/timetable.dart';
 import 'models/traffic_info.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/scheduler.dart';
 
 abstract class BusNetwork {
 
-  Future<bool>? waitInit;
 
-  BusNetwork() {
-    waitInit = init();
-  }
+  BusNetwork();
 
-  // Initiate and return true if is available
-  // Need to be call at the start of the function and returned at the end
-  @mustCallSuper
-  @protected
-  Future<bool> init() {
-    if (waitInit != null) return waitInit!;
-    return Future.value(true);
-  }
+  Future<bool> init();
+
   // Return if available
   bool isAvailable();
 
