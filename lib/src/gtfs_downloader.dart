@@ -30,6 +30,7 @@ class GTFSDataDownloader {
 
 
   GTFSData? _gtfsData;
+  Directory get gtfsDir => Directory(paths.extractDir);
 
   GTFSDataDownloader.vitalis(GTFSPaths paths)
       : this(
@@ -47,8 +48,18 @@ class GTFSDataDownloader {
     return _gtfsData ?? (await loadFile());
   }
 
+  Future<bool> removeFiles() async {
+
+    if (!await gtfsDir.exists()) return false;
+    for (var e in gtfsDir.listSync()) {
+      if (e is! File) continue;
+      File file = e;
+      await file.delete();
+    }
+    return true;
+  }
+
   Future<GTFSData?> loadFile() async {
-    Directory gtfsDir = Directory(paths.extractDir);
     await gtfsDir.create(recursive: true);
 
     Map<String, CSVTable> files = loadFiles(gtfsDir);
@@ -121,7 +132,9 @@ class GTFSDataDownloader {
   Future<void> setDownloadDate(DateTime? time) async {
     final file = File("${paths.extractDir}download-date");
     if (time == null) {
-      await file.delete();
+      if (await file.exists()) {
+        await file.delete();
+      }
       return;
     }
 

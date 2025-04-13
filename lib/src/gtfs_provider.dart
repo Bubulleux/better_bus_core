@@ -13,28 +13,30 @@ import 'models/station.dart';
 import 'models/traffic_info.dart';
 
 class GTFSProvider extends BusNetwork {
-  GTFSProvider({required this.provider});
+  GTFSProvider({required this.downloader});
 
   GTFSProvider.vitalis(GTFSPaths paths)
-      : this(provider: GTFSDataDownloader.vitalis(paths));
+      : this(downloader: GTFSDataDownloader.vitalis(paths));
 
-  final GTFSDataDownloader provider;
+  final GTFSDataDownloader downloader;
   GTFSData? _data;
 
   GTFSData get data => _data!;
 
   @override
-  Future<bool> init() async {
-    bool pathInit = await provider.paths.init();
+  Future<bool> init({bool offline = false}) async {
+    if (offline) {
+      await downloader.paths.init();
+      _data = await downloader.loadFile();
+      return isAvailable();
+    }
+
+    bool pathInit = await downloader.paths.init();
     if (!pathInit) {
-      // TODO: Make it better, test it
       print("Path provider failded to init");
       return false;
     }
-    if (_data != null) {
-      return true;
-    }
-    final providerData = await provider.getData();
+    final providerData = await downloader.getData();
     if (providerData == null) {
       return false;
     }

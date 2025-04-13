@@ -15,7 +15,7 @@ void main() async {
       GTFSPaths.broken()
   );
 
-  final gtfs = GTFSProvider(provider: downloader);
+  final gtfs = GTFSProvider(downloader: downloader);
   ApiProvider api = ApiProvider.vitalis();
 
   setUp(() async {
