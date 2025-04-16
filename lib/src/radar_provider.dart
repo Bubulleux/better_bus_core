@@ -6,20 +6,13 @@ import 'package:http/http.dart' as http;
 class RadarClient {
   late final Uri apiUrl;
   final BusNetwork provider;
-  late final Map<int, Station> _stations;
-  Future? stationLoad;
+  late Map<int, Station> _stations;
 
   static final localhostEndPoint = Uri.parse("http://192.168.188.242:8080");
   static final productionEndpoint =
       Uri.parse("https://better-bus-server-fthea.ondigitalocean.app");
 
-  RadarClient({required this.apiUrl, required this.provider}) {
-    stationLoad = provider.getStations()
-      ..then((value) {
-        _stations = value.asMap().map((_, value) => MapEntry(value.id, value));
-        stationLoad = null;
-      });
-  }
+  RadarClient({required this.apiUrl, required this.provider});
 
   RadarClient.localhost({required BusNetwork provider})
       : this(apiUrl: localhostEndPoint, provider: provider);
@@ -27,8 +20,15 @@ class RadarClient {
   RadarClient.production({required BusNetwork provider})
       : this(apiUrl: productionEndpoint, provider: provider);
 
+  Future<bool> init() async {
+    final stations = await provider.getStations();
+    _stations = stations.asMap().map((_, value) => MapEntry(value.id, value));
+    print("Report stations ${_stations.length}");
+    return true;
+  }
+
+
   Future<List<Report>> getReports() async {
-    await stationLoad;
 
     final response = await http.get(Uri.parse('$apiUrl/reports'));
     if (response.statusCode != 200) {
@@ -44,7 +44,6 @@ class RadarClient {
 
   Future<Report?> sendReport(Station station) async {
     // TODO : Maybe Post is better ?
-    await stationLoad;
     final uri = Uri.parse('$apiUrl/sendReport/${station.id}');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
@@ -55,7 +54,6 @@ class RadarClient {
   }
 
   Future<Report?> updateReport(Report report, bool stillThere) async {
-    await stationLoad;
     final uri = Uri.parse('$apiUrl/update/${report.id}/${stillThere ? 1 : 0}');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
