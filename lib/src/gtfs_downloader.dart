@@ -16,6 +16,7 @@ class DatasetMetadata {
 
   DatasetMetadata(this.ressourceUri, this.updateTime);
 }
+typedef OnProgress = void Function(double progress);
 
 class GTFSDataDownloader {
   GTFSDataDownloader({
@@ -30,6 +31,7 @@ class GTFSDataDownloader {
 
 
   GTFSData? _gtfsData;
+  GTFSData? get data => _gtfsData;
   Directory get gtfsDir => Directory(paths.extractDir);
 
   GTFSDataDownloader.vitalis(GTFSPaths paths)
@@ -41,11 +43,12 @@ class GTFSDataDownloader {
           paths: paths,
         );
 
-  Future<GTFSData?> getData() async {
+  Future<bool> init({OnProgress? onProgress}) async {
     if (_gtfsData == null) {
-      await downloadFile();
+      await downloadFile(onProgress: onProgress);
     }
-    return _gtfsData ?? (await loadFile());
+    _gtfsData = (await loadFile());
+    return _gtfsData != null;
   }
 
   Future<bool> removeFiles() async {
@@ -83,8 +86,7 @@ class GTFSDataDownloader {
     return files;
   }
 
-  Future<bool> downloadFile(
-      {void Function(double progress)? onProgress}) async {
+  Future<bool> downloadFile({OnProgress? onProgress}) async {
     // TODO: Remove or handle getDownloadWhenWifi
 
     final lastUpdate = await getDownloadDate();
@@ -97,7 +99,7 @@ class GTFSDataDownloader {
       DatasetMetadata metadata = await getFileMetaData();
       if (lastUpdate != null && metadata.updateTime.isBefore(lastUpdate)) {
         print("Download abord recent data found");
-        return false;
+        return true;
       }
 
       final request = http.Request("GET", metadata.ressourceUri);
