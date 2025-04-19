@@ -19,7 +19,7 @@ class GTFSProvider extends BusNetwork {
       : this(downloader: GTFSDataDownloader.vitalis(paths));
 
   final GTFSDataDownloader downloader;
-  GTFSData? _data;
+  GTFSData? get _data => downloader.data;
 
   GTFSData get data => _data!;
 
@@ -27,7 +27,7 @@ class GTFSProvider extends BusNetwork {
   Future<bool> init({bool offline = false, OnProgress? onProgress}) async {
     if (offline) {
       await downloader.paths.init();
-      _data = await downloader.loadFile();
+      await downloader.loadIfExist();
       return isAvailable();
     }
 
@@ -36,14 +36,8 @@ class GTFSProvider extends BusNetwork {
       print("Path provider failded to init");
       return false;
     }
-    await downloader.init(onProgress: onProgress);
-    final providerData = downloader.data;
-    if (providerData == null) {
-      return false;
-    }
-    onProgress?.call(1);
-    _data = providerData;
-    return true;
+    await downloader.downloadAndLoad(onProgress ?? (_) {});
+    return isAvailable();
   }
 
   @override

@@ -43,16 +43,33 @@ class GTFSDataDownloader {
           paths: paths,
         );
 
-  Future<bool> init({OnProgress? onProgress}) async {
-    if (_gtfsData == null) {
-      await downloadFile(onProgress: onProgress);
+  Future<bool> loadIfExist() async {
+    await paths.init();
+    await gtfsDir.create(recursive: true);
+
+    Map<String, CSVTable> files = loadFiles(gtfsDir);
+
+    if (files.isEmpty) {
+      return false;
     }
-    _gtfsData = (await loadFile());
-    return _gtfsData != null;
+    _gtfsData = GTFSData(files);
+    return true;
   }
+
+  Future<bool> downloadAndLoad(OnProgress onProgress) async {
+    await paths.init();
+    final success = await downloadFile(onProgress: onProgress);
+    if (!success) {
+      print("Download failed");
+    }
+
+    return await loadIfExist();
+  }
+
 
   Future<bool> removeFiles() async {
 
+    await paths.init();
     if (!await gtfsDir.exists()) return false;
     for (var e in gtfsDir.listSync()) {
       if (e is! File) continue;
@@ -101,6 +118,7 @@ class GTFSDataDownloader {
         print("Download abord recent data found");
         return true;
       }
+      print("Start Downloading GTFS: Last : $lastUpdate, New :${metadata.updateTime}");
 
       final request = http.Request("GET", metadata.ressourceUri);
       response = await client.send(request);
@@ -145,6 +163,8 @@ class GTFSDataDownloader {
 
   Future<DateTime?> getDownloadDate() async {
     final file = File("${paths.extractDir}download-date");
+
+    print(file.path);
     if (!await file.exists()) return null;
     final content = await file.readAsString();
     final value = int.tryParse(content);
