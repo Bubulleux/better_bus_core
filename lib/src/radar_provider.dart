@@ -21,6 +21,10 @@ class RadarClient {
       : this(apiUrl: productionEndpoint, provider: provider);
 
   Future<bool> init() async {
+    final status = await getStatus();
+    if (!status.available) {
+      return false;
+    }
     final stations = await provider.getStations();
     _stations = stations.asMap().map((_, value) => MapEntry(value.id, value));
     print("Report stations ${_stations.length}");
@@ -63,5 +67,18 @@ class RadarClient {
     String body = utf8.decode(response.bodyBytes);
     Map<String, dynamic> output = jsonDecode(body);
     return Report.fromJson(output, _stations);
+  }
+
+  Future<ApiStatus> getStatus() async {
+
+    final uri = Uri.parse('$apiUrl/status');
+    final response = await http.get(uri);
+    if (response.statusCode != 200) {
+      print("Failed to get Api Status");
+      return ApiStatus(false);
+    }
+    String body = utf8.decode(response.bodyBytes);
+    Map<String, dynamic> output = jsonDecode(body);
+    return ApiStatus.fromJson(output);
   }
 }
