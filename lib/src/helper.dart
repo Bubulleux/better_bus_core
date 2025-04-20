@@ -18,7 +18,7 @@ extension DateTimeAtMidnight on DateTime {
 }
 
 extension LatLngDst on LatLng {
-  double distance(LatLng other) {
+  double distance(LatLng other, {int dec = 2}) {
     final lat1 = latitude;
     final lon1 = longitude;
     final lat2 = other.latitude;
@@ -29,6 +29,7 @@ extension LatLngDst on LatLng {
         c((lat2 - lat1) * p) / 2 +
         c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     double result = 12742 * asin(sqrt(a));
-    return result;
+    final factor = pow(10, dec);
+    return (result * factor).roundToDouble() / factor;
   }
 }
