@@ -47,7 +47,7 @@ class GTFSDataDownloader {
     await paths.init();
     await gtfsDir.create(recursive: true);
 
-    Map<String, CSVTable> files = loadFiles(gtfsDir);
+    Map<String, CSVTable> files = await loadFiles();
 
     if (files.isEmpty) {
       return false;
@@ -82,7 +82,7 @@ class GTFSDataDownloader {
   Future<GTFSData?> loadFile() async {
     await gtfsDir.create(recursive: true);
 
-    Map<String, CSVTable> files = loadFiles(gtfsDir);
+    Map<String, CSVTable> files = await loadFiles();
 
     if (files.isEmpty) {
       return null;
@@ -91,9 +91,11 @@ class GTFSDataDownloader {
     return _gtfsData;
   }
 
-  static Map<String, CSVTable> loadFiles(Directory dir) {
+   Future<Map<String, CSVTable>> loadFiles() async {
     Map<String, CSVTable> files = {};
-    for (FileSystemEntity e in dir.listSync()) {
+    final dir = Directory(paths.extractDir);
+    final dirFiles = await dir.list().toList();
+    for (FileSystemEntity e in dirFiles) {
       if (e is! File) continue;
 
       File file = e;
