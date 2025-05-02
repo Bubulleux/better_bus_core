@@ -10,7 +10,7 @@ class RadarClient {
 
   static final localhostEndPoint = Uri.parse("http://192.168.188.242:8080");
   static final productionEndpoint =
-      Uri.parse("https://better-bus-server-fthea.ondigitalocean.app");
+      Uri.parse("http://142.93.228.38");
 
   RadarClient({required this.apiUrl, required this.provider});
 
