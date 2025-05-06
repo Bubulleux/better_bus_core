@@ -194,10 +194,6 @@ class ApiProvider extends BusNetwork {
     //   }
     // }
 
-    // TODO: Check Connectivity
-    // if (!await ConnectivityChecker.isConnected()) {
-    //   throw CustomErrors.noInternet;
-    // }
 
     while (status != 200 && countTry < 3) {
       countTry += 1;

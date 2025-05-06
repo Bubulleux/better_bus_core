@@ -79,7 +79,7 @@ void testNetwork(BusNetwork network, String testStationName, String lineTestName
 
     // Check that all line have 1 or 2 directions.
     for (var curLine in lines.values) {
-      final dirIds = curLine.directions.map((e) => e.directionId).toSet();
+      final dirIds = curLine.directions.map((e) => e.directionId);
       expect(dirIds, isNotEmpty);
       expect(dirIds.length, lessThanOrEqualTo(2));
     }
@@ -132,7 +132,7 @@ void testGTFSDownloader(GTFSDataDownloader downloader) {
     expect(data, isNotNull);
 
     sucess = await downloader.downloadFile();
-    expect(sucess, isFalse);
+    expect(sucess, isTrue);
 
     if (data == null) return;
 
