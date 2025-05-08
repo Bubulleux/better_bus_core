@@ -1,13 +1,13 @@
 import 'package:better_bus_core/src/models/gtfs/way_point.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../helper.dart';
 import '../station.dart';
 import 'csv_parser.dart';
 import 'line.dart';
 import 'stop.dart';
 import 'stop_time.dart';
 import 'trip.dart';
-import '../../helper.dart';
 
 class GTFSData {
   late final Map<int, Station> stations;
@@ -36,13 +36,14 @@ class GTFSData {
 
     for (var e in table) {
       final curStop = GTFSStop.fromCSV(e);
-      if (curStop.parent == null) {
-        rawStations[curStop.id] = curStop;
+      final parent = curStop.parent ?? curStop.id;
+      if (rawStops.containsKey(parent)) {
+        rawStops[parent]!.add(curStop);
       } else {
-        if (!rawStops.containsKey(curStop.parent!)) {
-          rawStops[curStop.parent!] = [];
-        }
-        rawStops[curStop.parent!]!.add(curStop);
+        rawStops[parent] = [curStop];
+      }
+      if (curStop.isParent) {
+        rawStations[curStop.id] = curStop;
       }
     }
     Map<int, Station> result = {};
@@ -52,7 +53,7 @@ class GTFSData {
       final stops = rawStops[e.key]!;
       final station = e.value.toStation(stops);
       result[e.key] = station;
-      newStopParent.addEntries(stops.map((e) => MapEntry(e.id, station)));
+      newStopParent.addEntries(stops.map((s) => MapEntry(s.id, station)));
     }
 
     stations = result;
@@ -98,17 +99,19 @@ class GTFSData {
     stopTime = stopTimes;
   }
 
-void loadShapes(CSVTable table) {
-  Map<int, List<GTFSWayPoint>> rawShapes = {};
+  void loadShapes(CSVTable table) {
+    Map<int, List<GTFSWayPoint>> rawShapes = {};
 
-  for (var row in table) {
-    final wayPoint = GTFSWayPoint.fromRaw(row);
-    rawShapes[wayPoint.shapeId] ??= [];
-    rawShapes[wayPoint.shapeId]!.add(wayPoint);
+    for (var row in table) {
+      final wayPoint = GTFSWayPoint.fromRaw(row);
+      rawShapes[wayPoint.shapeId] ??= [];
+      rawShapes[wayPoint.shapeId]!.add(wayPoint);
+    }
+
+    shapes = {
+      for (var e in rawShapes.entries) e.key: GTFSShape.fromWaypoint(e.value)
+    };
   }
-
-  shapes = { for (var e in rawShapes.entries) e.key : GTFSShape.fromWaypoint(e.value)};
-}
 }
 
 class GTFSService {

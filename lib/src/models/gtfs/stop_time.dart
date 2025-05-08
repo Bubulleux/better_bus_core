@@ -11,7 +11,7 @@ class GTFSStopTime  {
   GTFSStopTime(Map<String, String> row) {
 
     arrival = parseDuration(row["arrival_time"]!);
-    distanceTravel = int.parse(row["shape_dist_traveled"]!);
+    distanceTravel = int.tryParse(row["shape_dist_traveled"]!) ?? -1;
     stopId = int.parse(row["stop_id"]!);
     tripId = int.parse(row["trip_id"]!);
     stopIndex = int.parse(row["stop_sequence"]!);

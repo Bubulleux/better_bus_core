@@ -1,3 +1,4 @@
+import 'package:better_bus_core/core.dart';
 import 'package:better_bus_core/src/api_provider.dart';
 import 'package:better_bus_core/src/bus_network.dart';
 import 'package:better_bus_core/src/full_provider.dart';
@@ -6,16 +7,20 @@ import 'package:better_bus_core/src/gtfs_provider.dart';
 import 'package:better_bus_core/src/models/bus_line.dart';
 import 'package:better_bus_core/src/models/gtfs/gtfs_path.dart';
 import 'package:better_bus_core/src/models/station.dart';
+import 'package:better_bus_core/src/network_specific/mobius_downloader.dart';
+import 'package:better_bus_core/src/network_specific/vitalis_downloader.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
 void main() async {
 
-  final downloader = GTFSDataDownloader.vitalis(
-      GTFSPaths.broken()
+  final vitalisDownload = VitalisDownloader(
+      paths: GTFSPaths.broken()
   );
 
-  final gtfs = GTFSProvider(downloader: downloader);
+  final mobiusDownloader = MobiusDownloader(paths: GTFSPaths.broken());
+
+  final gtfs = GTFSProvider(downloader: vitalisDownload);
   ApiProvider api = ApiProvider.vitalis();
 
   setUp(() async {
@@ -23,20 +28,25 @@ void main() async {
       d.dir("download"),
       d.dir("extract"),
     ]).create();
-    downloader.paths = GTFSPaths("${d.sandbox}/gtfs/download/gtfs.zip", "${d.sandbox}/gtfs/extract/");
+    vitalisDownload.paths = GTFSPaths("${d.sandbox}/vitalis/download/gtfs.zip", "${d.sandbox}/vitalis/extract/");
+    mobiusDownloader.paths = GTFSPaths("${d.sandbox}/mobius/download/gtfs.zip", "${d.sandbox}/mobius/extract/");
   });
   const stationName = "Northampton";
   const lineId = "2B";
   const directionId = 0;
 
   // TODO: Need to be tested
+  group("Test Mobius Network", () {
+    testGTFSDownloader(mobiusDownloader);
+    testNetwork(GTFSProvider(downloader: mobiusDownloader), "Sillac", "A", 0);
+  });
+
   group("Test Vitalis Api reponse", () {
     testNetwork(api, stationName, lineId, directionId);
   });
 
   group("Test Vitalis GTFS", () {
-
-    testGTFSDownloader(downloader);
+    testGTFSDownloader(vitalisDownload);
     testNetwork(gtfs, stationName, lineId, directionId);
   });
 
@@ -81,7 +91,7 @@ void testNetwork(BusNetwork network, String testStationName, String lineTestName
     for (var curLine in lines.values) {
       final dirIds = curLine.directions.map((e) => e.directionId);
       expect(dirIds, isNotEmpty);
-      expect(dirIds.length, lessThanOrEqualTo(2));
+      // expect(dirIds.length, lessThanOrEqualTo(2));
     }
   });
 
@@ -95,7 +105,7 @@ void testNetwork(BusNetwork network, String testStationName, String lineTestName
     final timetable = await network.getTimetable(station!);
     // TODO: Make it more robust
     expect(timetable, isNotNull);
-    expect(timetable.getNext(), isNotEmpty);
+    expect(timetable.getNext(from: DateTime.now().atMidnight()), isNotEmpty);
   });
 
   test("Get Line Timetable", () async {

@@ -10,6 +10,7 @@ class GTFSStop extends Place {
   final int id;
   final String code;
   final int? parent;
+  bool get isParent => parent == null;
 
   GTFSStop.fromCSV(Map<String, String> row)
       : this(
@@ -18,7 +19,8 @@ class GTFSStop extends Place {
       position: LatLng(double.parse(row["stop_lat"]!),
           double.parse(row["stop_lon"]!)),
     code: row["stop_code"]!,
-    parent: int.tryParse(row["parent_station"]!)
+    // Prevent 0 as parent
+    parent: ((p) => p == 0 ? null : p)(int.tryParse(row["parent_station"]!))
   );
 
   Station toStation(List<GTFSStop> children) {
