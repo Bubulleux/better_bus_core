@@ -14,3 +14,6 @@ export 'bus_network.dart';
 export 'models/location.dart';
 export 'models/shape.dart';
 export 'models/api_status.dart';
+export 'models/matching_timetable.dart';
+export 'models/gtfs/timetable.dart';
+export 'models/gtfs/metadata.dart';

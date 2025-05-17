@@ -4,7 +4,7 @@ import 'package:better_bus_core/core.dart';
 import 'package:http/http.dart' as http;
 
 class RadarClient {
-  late final Uri apiUrl;
+  late final Uri _apiUrl;
   final BusNetwork provider;
   late Map<int, Station> _stations;
 
@@ -12,7 +12,7 @@ class RadarClient {
   static final productionEndpoint =
       Uri.parse("http://142.93.228.38");
 
-  RadarClient({required this.apiUrl, required this.provider});
+  RadarClient({required Uri apiUrl, required this.provider}) : _apiUrl = apiUrl;
 
   RadarClient.localhost({required BusNetwork provider})
       : this(apiUrl: localhostEndPoint, provider: provider);
@@ -34,7 +34,7 @@ class RadarClient {
 
   Future<List<Report>> getReports() async {
 
-    final response = await http.get(Uri.parse('$apiUrl/reports'));
+    final response = await http.get(Uri.parse('$_apiUrl/reports'));
     if (response.statusCode != 200) {
       print("Failed to get reports");
       return [];
@@ -48,7 +48,7 @@ class RadarClient {
 
   Future<Report?> sendReport(Station station) async {
     // TODO : Maybe Post is better ?
-    final uri = Uri.parse('$apiUrl/sendReport/${station.id}');
+    final uri = Uri.parse('$_apiUrl/sendReport/${station.id}');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
       print("Failed to send report");
@@ -58,7 +58,7 @@ class RadarClient {
   }
 
   Future<Report?> updateReport(Report report, bool stillThere) async {
-    final uri = Uri.parse('$apiUrl/update/${report.id}/${stillThere ? 1 : 0}');
+    final uri = Uri.parse('$_apiUrl/update/${report.id}/${stillThere ? 1 : 0}');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
       print("Failed to update report");
@@ -71,7 +71,7 @@ class RadarClient {
 
   Future<ApiStatus> getStatus() async {
 
-    final uri = Uri.parse('$apiUrl/status');
+    final uri = Uri.parse('$_apiUrl/status');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
       print("Failed to get Api Status");

@@ -14,6 +14,10 @@ class GTFSTimeTable extends Timetable {
         a.stopTimes[station]!.arrival.compareTo(b.stopTimes[station]!.arrival));
   }
 
+  GTFSTimeTable.copy(GTFSTimeTable from) : super.copy(from) {
+    _trips = from._trips;
+  }
+
   @override
   Iterable<StopTime> getNext({DateTime? from}) {
     from ??= DateTime.now();

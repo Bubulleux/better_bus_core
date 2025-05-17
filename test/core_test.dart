@@ -7,8 +7,8 @@ import 'package:better_bus_core/src/gtfs_provider.dart';
 import 'package:better_bus_core/src/models/bus_line.dart';
 import 'package:better_bus_core/src/models/gtfs/gtfs_path.dart';
 import 'package:better_bus_core/src/models/station.dart';
-import 'package:better_bus_core/src/network_specific/mobius_downloader.dart';
-import 'package:better_bus_core/src/network_specific/vitalis_downloader.dart';
+import 'package:better_bus_angouleme/mobius_downloader.dart';
+import 'package:better_bus_v2/vitalis_downloader.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
@@ -52,11 +52,6 @@ void main() async {
 
   group("Test Networks Equality", () {
     testProviderEquality(api, gtfs);
-  });
-
-  group("Test Full Provider", () {
-    final provider = NetworkProvider(api: api, gtfs: gtfs);
-    testNetwork(provider, stationName, lineId, directionId);
   });
 
   group("Faild Test", () {

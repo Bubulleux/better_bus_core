@@ -38,7 +38,7 @@ abstract class GTFSDataDownloader {
     return true;
   }
 
-  Future<bool> downloadAndLoad(OnProgress onProgress) async {
+  Future<bool> downloadAndLoad({OnProgress? onProgress}) async {
     await paths.init();
     final success = await downloadFile(onProgress: onProgress);
     if (!success) {

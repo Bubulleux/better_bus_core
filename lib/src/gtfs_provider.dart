@@ -1,6 +1,6 @@
 import 'package:better_bus_core/src/helper.dart';
-import 'package:better_bus_core/src/network_specific/mobius_downloader.dart';
-import 'package:better_bus_core/src/network_specific/vitalis_downloader.dart';
+import 'package:better_bus_angouleme/mobius_downloader.dart';
+import 'package:better_bus_v2/vitalis_downloader.dart';
 
 import 'bus_network.dart';
 import 'gtfs_downloader.dart';
@@ -29,19 +29,14 @@ class GTFSProvider extends BusNetwork {
   GTFSData get data => _data!;
 
   @override
-  Future<bool> init({bool offline = false, OnProgress? onProgress}) async {
-    if (offline) {
-      await downloader.paths.init();
-      await downloader.loadIfExist();
-      return isAvailable();
-    }
+  Future<bool> init({OnProgress? onProgress}) async {
 
     bool pathInit = await downloader.paths.init();
     if (!pathInit) {
       print("Path provider failded to init");
       return false;
     }
-    await downloader.downloadAndLoad(onProgress ?? (_) {});
+    await downloader.downloadAndLoad(onProgress: onProgress);
     return isAvailable();
   }
 
