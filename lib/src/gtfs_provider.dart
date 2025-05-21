@@ -1,6 +1,5 @@
 import 'package:better_bus_core/src/helper.dart';
-import 'package:better_bus_angouleme/mobius_downloader.dart';
-import 'package:better_bus_v2/vitalis_downloader.dart';
+import 'vitalis_downloader.dart';
 
 import 'bus_network.dart';
 import 'gtfs_downloader.dart';
@@ -20,8 +19,6 @@ class GTFSProvider extends BusNetwork {
   GTFSProvider.vitalis(GTFSPaths paths)
       : this(downloader: VitalisDownloader(paths: paths));
 
-  GTFSProvider.mobius(GTFSPaths paths)
-      : this(downloader: MobiusDownloader(paths: paths));
 
   final GTFSDataDownloader downloader;
   GTFSData? get _data => downloader.data;

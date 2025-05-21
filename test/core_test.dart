@@ -7,7 +7,6 @@ import 'package:better_bus_core/src/gtfs_provider.dart';
 import 'package:better_bus_core/src/models/bus_line.dart';
 import 'package:better_bus_core/src/models/gtfs/gtfs_path.dart';
 import 'package:better_bus_core/src/models/station.dart';
-import 'package:better_bus_angouleme/mobius_downloader.dart';
 import 'package:better_bus_v2/vitalis_downloader.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
@@ -18,7 +17,7 @@ void main() async {
       paths: GTFSPaths.broken()
   );
 
-  final mobiusDownloader = MobiusDownloader(paths: GTFSPaths.broken());
+  // final mobiusDownloader = MobiusDownloader(paths: GTFSPaths.broken());
 
   final gtfs = GTFSProvider(downloader: vitalisDownload);
   ApiProvider api = ApiProvider.vitalis();
@@ -29,17 +28,17 @@ void main() async {
       d.dir("extract"),
     ]).create();
     vitalisDownload.paths = GTFSPaths("${d.sandbox}/vitalis/download/gtfs.zip", "${d.sandbox}/vitalis/extract/");
-    mobiusDownloader.paths = GTFSPaths("${d.sandbox}/mobius/download/gtfs.zip", "${d.sandbox}/mobius/extract/");
+    // mobiusDownloader.paths = GTFSPaths("${d.sandbox}/mobius/download/gtfs.zip", "${d.sandbox}/mobius/extract/");
   });
   const stationName = "Northampton";
   const lineId = "2B";
   const directionId = 0;
 
   // TODO: Need to be tested
-  group("Test Mobius Network", () {
-    testGTFSDownloader(mobiusDownloader);
-    testNetwork(GTFSProvider(downloader: mobiusDownloader), "Sillac", "A", 0);
-  });
+  // group("Test Mobius Network", () {
+  //   testGTFSDownloader(mobiusDownloader);
+  //   testNetwork(GTFSProvider(downloader: mobiusDownloader), "Sillac", "A", 0);
+  // });
 
   group("Test Vitalis Api reponse", () {
     testNetwork(api, stationName, lineId, directionId);
