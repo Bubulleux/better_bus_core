@@ -7,4 +7,3 @@ export 'src/models.dart';
 export 'src/helper.dart';
 export 'src/radar_provider.dart';
 export 'src/broken_api.dart';
-export 'src/vitalis_downloader.dart';

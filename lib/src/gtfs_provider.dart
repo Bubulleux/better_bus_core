@@ -1,5 +1,4 @@
 import 'package:better_bus_core/src/helper.dart';
-import 'vitalis_downloader.dart';
 
 import 'bus_network.dart';
 import 'gtfs_downloader.dart';
@@ -16,8 +15,8 @@ import 'models/traffic_info.dart';
 class GTFSProvider extends BusNetwork {
   GTFSProvider({required this.downloader});
 
-  GTFSProvider.vitalis(GTFSPaths paths)
-      : this(downloader: VitalisDownloader(paths: paths));
+  // GTFSProvider.vitalis(GTFSPaths paths)
+  //     : this(downloader: VitalisDownloader(paths: paths));
 
 
   final GTFSDataDownloader downloader;
