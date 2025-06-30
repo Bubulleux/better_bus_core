@@ -29,7 +29,7 @@ class GTFSRTProvider extends GTFSProvider {
 
 
   @override
-  Future<GTFSRTTimetable> getTimetable(Station station, {DateTime? time}) async {
+  Future<GTFSTimeTable> getTimetable(Station station, {DateTime? time}) async {
     await checkData();
     final timetable = await super.getTimetable(station, time: time);
     return GTFSRTTimetable(timetable, message!);

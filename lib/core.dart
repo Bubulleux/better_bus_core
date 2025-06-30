@@ -7,3 +7,6 @@ export 'src/models.dart';
 export 'src/helper.dart';
 export 'src/radar_provider.dart';
 export 'src/broken_api.dart';
+export 'src/networks/mobius_downloader.dart';
+export 'src/gtfsrt_provider.dart';
+

@@ -40,7 +40,8 @@ class GTFSRTTimetable extends GTFSTimeTable {
     final newTrip = GTFSRTTrip(time.trip!, update);
 
 
-    time.realTime = time.aimedTime.add(Duration(seconds: delay.toInt()));
+    time.realTime = newTrip.from(time.station).first.realTime;
+    time.trip = newTrip;
     return time;
   }
 }

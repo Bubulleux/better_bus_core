@@ -17,3 +17,4 @@ export 'models/api_status.dart';
 export 'models/matching_timetable.dart';
 export 'models/gtfs/timetable.dart';
 export 'models/gtfs/metadata.dart';
+export 'models/gtfs/rt_timetable.dart';
