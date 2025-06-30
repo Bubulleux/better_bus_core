@@ -3,7 +3,8 @@ import 'package:better_bus_core/src/models/waypoint.dart';
 import '../models.dart';
 
 class BusTrip extends LineDirected {
-  BusTrip(super.direction, {required this.stopTimes, required this.shape, required this.id});
+  BusTrip(super.direction, 
+  {required this.stopTimes, required this.shape, required this.id});
 
 
   final int id;
@@ -50,8 +51,10 @@ class BusTrip extends LineDirected {
 }
 
 class TripStop extends WayPoint {
-  TripStop(this.station, this.travelDist, {required super.time}): super(position: station.position);
+  TripStop(this.station, this.travelDist, {required super.time, required this.subStation, this.realTime}): super(position: station.position);
 
   final Station station;
+  DateTime? realTime;
+  final int subStation;
   final int travelDist;
 }

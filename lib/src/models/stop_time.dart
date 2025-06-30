@@ -41,7 +41,7 @@ class StopTime extends LineDirected implements Comparable<StopTime>{
 
   @override
     String toString() {
-      return "${line.id} ${destination} \t\t ${DateFormat.Hm().format(time)} \t(${delay.inSeconds})";
+      return "${line.id} ${destination} \t\t ${DateFormat.Hm().format(time)} \t(${delay.inMilliseconds})";
     }
 
 }

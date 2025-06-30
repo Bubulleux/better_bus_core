@@ -15,13 +15,18 @@ class GTFSRTProvider extends GTFSProvider {
 
   Future test() async {
     await init();
-
-    final station = (await getStations()).firstWhere((e) => e.name.startsWith("Angoulême Cathédrale"));
+    final stations = await getStations();
+    final station = stations.firstWhere((e) => e.name.startsWith("Angoulême Gare SNCF"));
     final times = await getTimetable(station);
     for (var t in times.getNext()){
       print(t);
     }
+
+    for (var e in message!.entity) {
+      
+    }
   }
+
 
   @override
   Future<GTFSRTTimetable> getTimetable(Station station, {DateTime? time}) async {

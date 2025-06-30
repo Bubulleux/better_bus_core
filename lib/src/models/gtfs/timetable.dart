@@ -6,7 +6,7 @@ import '../../helper.dart';
 class GTFSTimeTable extends Timetable {
   late final List<GTFSTrip> _trips;
 
-  List<GTFSTrip> get trips => _trips;
+  Iterable<GTFSTrip> get trips => _trips;
 
   GTFSTimeTable(super.station, super.date, Iterable<GTFSTrip> trips) {
     _trips = trips.where((e) => e.stopTimes.containsKey(station)).toList();
@@ -23,7 +23,7 @@ class GTFSTimeTable extends Timetable {
     from ??= DateTime.now();
     Duration fromDuration = from.difference(date.atMidnight());
 
-    return _trips
+    return trips
         .where((e) => e.stopTimes[station]!.arrival >= fromDuration)
         .map((e) => StopTime(
             station, e.direction, date.add(e.stopTimes[station]!.arrival),

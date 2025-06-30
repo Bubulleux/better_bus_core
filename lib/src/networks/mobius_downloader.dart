@@ -14,7 +14,7 @@ class MobiusDownloader extends GTFSDataDownloader {
     http.Response res = await http.get(uri);
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
-    List<dynamic> ressources = json["ressource"];
+    List<dynamic> ressources = json["resources"];
     late final Uri dataUri;
     late final DateTime updateTime;
     Uri? rtEndPoint;
@@ -23,7 +23,7 @@ class MobiusDownloader extends GTFSDataDownloader {
     final format = ressource["format"];
     if (format == "GTFS") {
        dataUri = Uri.parse(ressource["original_url"]);
-       updateTime = DateTime.parse(ressource["updated_at"]);
+       updateTime = DateTime.parse(ressource["updated"]);
     }
     if (format == "gtfs-rt") {
         assert(rtEndPoint == null);

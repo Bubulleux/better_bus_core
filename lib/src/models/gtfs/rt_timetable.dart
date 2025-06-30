@@ -1,21 +1,23 @@
 import 'package:better_bus_core/core.dart';
 import 'package:better_bus_core/src/models/gtfs/protoc/gtfs-realtime.pb.dart';
 import 'package:better_bus_core/src/models/gtfs/rt_trip.dart';
+import 'package:better_bus_core/src/models/gtfs/trip.dart';
+import 'package:better_bus_core/src/models/waypoint.dart';
 
 class GTFSRTTimetable extends GTFSTimeTable {
   final FeedMessage message;
-  final Map<int, GTFSRTTrip> updates  = {};
+  final Map<int, TripUpdate> updates  = {};
+
 
   GTFSRTTimetable(super.from, this.message) : super.copy() {
-
     final tripsMap = Map.fromEntries(trips.map((e) => MapEntry(e.id, e)));
 
     for (var e in message.entity) {
     final id = int.tryParse(e.tripUpdate.trip.tripId);
-    if (id == null) {
+    if (id == null || !tripsMap.containsKey(id)) {
         continue;
       }
-    updates[id] = GTFSRTTrip(tripsMap[id]!, e.tripUpdate);
+    updates[id] = e.tripUpdate;
   }
   }
 
@@ -26,16 +28,17 @@ class GTFSRTTimetable extends GTFSTimeTable {
 
   StopTime corect(StopTime time) {
     if (!updates.containsKey(time.trip?.id)) {
-      print("Not time updata founnd");
       return time;
     }
 
-    final update = updates[time.trip!.id]!;
-
-    final delay = update.delays[time.station.id];
-    if (delay == null || delay.isInfinite) {
+    final update = updates[time.trip!.id];
+    if (update == null) {
+      print("No Update found");
       return time;
     }
+
+    final newTrip = GTFSRTTrip(time.trip!, update);
+
 
     time.realTime = time.aimedTime.add(Duration(seconds: delay.toInt()));
     return time;

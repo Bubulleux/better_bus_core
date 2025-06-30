@@ -2,7 +2,6 @@ import 'package:better_bus_core/src/models/gtfs/gtfs_data.dart';
 import 'package:better_bus_core/src/models/waypoint.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../models.dart';
 import '../helper.dart';
 
 class LineShape {
@@ -10,7 +9,7 @@ class LineShape {
 
   LineShape(this.wayPoints);
 
-  LineShape.fromGTFS(GTFSShape shape, List<TripStop> stopTimes)
+  LineShape.fromGTFS(GTFSShape shape)
       : this(shape.wayPoints
             .map((e) => WayPoint(position: e, time: DateTime.now()))
             .toList());

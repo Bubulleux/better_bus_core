@@ -1,18 +1,31 @@
+import 'package:better_bus_core/core.dart';
 import 'package:better_bus_core/src/models/gtfs/protoc/gtfs-realtime.pb.dart';
 import 'package:better_bus_core/src/models/gtfs/trip.dart';
-import 'package:better_bus_core/src/models/station.dart';
 
-class GTFSRTTrip extends GTFSTrip {
-  final Map<int, double> delays = {};
+class GTFSRTTrip extends BusTrip {
+  GTFSRTTrip(BusTrip trip, TripUpdate tripUpdate) : super(trip, 
+    stopTimes: [], 
+    shape: trip.shape, 
+    id: trip.id) {
+    final updates = Map.fromEntries(
+      tripUpdate.stopTimeUpdate.map((e) =>
+        MapEntry(int.parse(e.stopId), e))
+    );
 
-  GTFSRTTrip(GTFSTrip from, TripUpdate update) : super.copy(from) {
-    for (var e in update.stopTimeUpdate) {
-      int id = int.parse(e.stopId);
-      
-      if (e.scheduleRelationship == TripDescriptor_ScheduleRelationship.DELETED) {
-        delays[id] = double.infinity;
-      }
-      delays[id] = (e.hasArrival() ? e.ensureArrival().delay : e.ensureDeparture().delay) as double;
+    for (var time in trip.stopTimes) {
+      final update = updates[time.subStation];
+    if (update == null) {
+      stopTimes.add(time);
+      continue;
+    }
+
+    if (update.scheduleRelationship == TripUpdate_StopTimeUpdate_ScheduleRelationship.SCHEDULED) {
+      stopTimes.add(time);
+      final delay = update.hasArrival() ?
+        update.arrival.delay : update.departure.delay;
+      time.realTime = time.time.add(Duration(seconds: delay));
     }
   }
+  }
+
 }
