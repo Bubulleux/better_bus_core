@@ -29,6 +29,15 @@ class GTFSTrip {
     data.routes[_routeID]!.addDirection(this);
   }
 
+  GTFSTrip.copy(GTFSTrip from) {
+    direction = from.direction;
+    id = from.id;
+    serviceID = from.serviceID;
+    _routeID = from._routeID;
+    _stopTimes = from.stopTimes;
+    shape = from.shape;
+  }
+
   BusTrip at(DateTime from) {
     final date = from.atMidnight();
     final times = stopTimes.entries

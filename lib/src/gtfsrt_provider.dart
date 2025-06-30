@@ -1,45 +1,48 @@
 import 'dart:io';
 
+import 'package:better_bus_core/core.dart';
+import 'package:better_bus_core/src/models/gtfs/protoc/gtfs-realtime.pb.dart';
+import 'package:better_bus_core/src/models/gtfs/rt_timetable.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/message_format.dart';
 
-import './protoc/gtfs-realtime.pb.dart';
-import './protoc/gtfs-realtime.pbenum.dart';
 
-class GTFSRTProvider {
-    final Uri endPoint;
+class GTFSRTProvider extends GTFSProvider {
 
-    GTFSRTProvider(this.endPoint) {
-        _fetchData();
+  FeedMessage? message;
+
+
+  GTFSRTProvider({required super.downloader});
+
+  Future test() async {
+    await init();
+
+    final station = (await getStations()).firstWhere((e) => e.name.startsWith("Angoulême Cathédrale"));
+    final times = await getTimetable(station);
+    for (var t in times.getNext()){
+      print(t);
     }
+  }
 
-    Future test() async {
-        await _fetchData();
-        await _loadFile();
-    }
+  @override
+  Future<GTFSRTTimetable> getTimetable(Station station, {DateTime? time}) async {
+    await checkData();
+    final timetable = await super.getTimetable(station, time: time);
+    return GTFSRTTimetable(timetable, message!);
+  }
 
-    Future _fetchData() async {
-        final  client = http.Client();
-        final request = http.Request("GET" ,endPoint);
-        final response = await client.send(request);
+  Future checkData() async {
+    message = await downloader.fetchRealtime();
+  }
 
-        final List<int> data = [];
 
-        await for (var buf in response.stream) {
-            data.addAll(buf);
-        }
-
-        print(data.length);
-    }
-
-    Future _loadFile() async {
-        final file = File("/home/ulysse/Projects/better_bus_workspace/core/lib/src/protoc/mobius-angouleme");
-
-        final data = await file.readAsBytes();
-        print(data.length);
-
-        final message = FeedMessage.fromBuffer(data);
-        print(message.entity.first);
-
-    }
+  // Future _loadFile() async {
+  //     final file = File("/home/ulysse/Projects/better_bus_workspace/core/lib/src/protoc/mobius-angouleme");
+  //
+  //     final data = await file.readAsBytes();
+  //     print(data.length);
+  //
+  //     final message = FeedMessage.fromBuffer(data);
+  //     print(message.entity.first);
+  //
+  // }
 }

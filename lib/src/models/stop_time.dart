@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'bus_trip.dart';
 import 'line_direction.dart';
 import 'station.dart';
@@ -36,5 +38,10 @@ class StopTime extends LineDirected implements Comparable<StopTime>{
   int compareTo(StopTime other) {
     return time.compareTo(other.time);
   }
+
+  @override
+    String toString() {
+      return "${line.id} ${destination} \t\t ${DateFormat.Hm().format(time)} \t(${delay.inSeconds})";
+    }
 
 }

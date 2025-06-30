@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
+import 'package:better_bus_core/src/models/gtfs/protoc/gtfs-realtime.pb.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +18,7 @@ abstract class GTFSDataDownloader {
   });
 
   GTFSPaths paths;
+  DatasetMetadata? metadata;
 
   GTFSData? _gtfsData;
 
@@ -93,15 +94,15 @@ abstract class GTFSDataDownloader {
     final List<int> bytes = [];
     var received = 0;
     try {
-      DatasetMetadata metadata = await getFileMetaData();
-      if (lastUpdate != null && metadata.updateTime.isBefore(lastUpdate)) {
+      metadata = await getFileMetaData();
+      if (lastUpdate != null && metadata!.updateTime.isBefore(lastUpdate)) {
         print("Download abord recent data found");
         return true;
       }
       print(
-          "Start Downloading GTFS: Last : $lastUpdate, New :${metadata.updateTime}");
+          "Start Downloading GTFS: Last : $lastUpdate, New :${metadata!.updateTime}");
 
-      final request = http.Request("GET", metadata.downloadUri);
+      final request = http.Request("GET", metadata!.downloadUri);
       response = await client.send(request);
       final total = response.contentLength ?? 0;
 
@@ -157,6 +158,25 @@ abstract class GTFSDataDownloader {
   Future extractZipFile() async {
     await extractFileToDisk(paths.gtfsFilePath, paths.extractDir);
   }
+
+  Future<FeedMessage> fetchRealtime() async {
+    assert(metadata?.gtfsrtEndpoint != null);
+
+    final  client = http.Client();
+    final request = http.Request("GET", metadata!.gtfsrtEndpoint!);
+    final response = await client.send(request);
+
+    final List<int> data = [];
+
+    await for (var buf in response.stream) {
+      data.addAll(buf);
+    }
+
+    return FeedMessage.fromBuffer(data);
+
+  }
+
+
 
   Future<DatasetMetadata> getFileMetaData();
 }
