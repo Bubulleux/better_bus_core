@@ -30,8 +30,11 @@ class GTFSRTProvider extends GTFSProvider {
 
   @override
   Future<GTFSTimeTable> getTimetable(Station station, {DateTime? time}) async {
-    await checkData();
     final timetable = await super.getTimetable(station, time: time);
+		if (!downloader.isRt) {
+			return (timetable);
+		}
+    await checkData();
     return GTFSRTTimetable(timetable, message!);
   }
 

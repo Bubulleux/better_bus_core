@@ -23,6 +23,7 @@ abstract class GTFSDataDownloader {
   GTFSData? _gtfsData;
 
   GTFSData? get data => _gtfsData;
+	bool get isRt => metadata?.gtfsrtEndpoint != null;
 
   Directory get gtfsDir => Directory(paths.extractDir);
 

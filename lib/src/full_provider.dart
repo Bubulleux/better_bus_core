@@ -1,4 +1,6 @@
 import 'package:better_bus_core/core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'api_provider.dart';
 import 'bus_network.dart';
@@ -10,9 +12,10 @@ import 'models/matching_timetable.dart';
 import 'models/station.dart';
 import 'models/timetable.dart';
 import 'models/traffic_info.dart';
+import 'package:better_bus_v2/data_provider/app_provider.dart';
 
 
-// class AWGTFSProvider extends BusNetwork {
+// class AWGTFSProvider extends AppProvider {
 //   final ApiProvider api;
 //   final GTFSProvider gtfs;
 //
@@ -32,6 +35,9 @@ import 'models/traffic_info.dart';
 //       print("GTFS PROVIDER: ${result[1]}");
 //     }
 //     return (result[0] || result[1]);
+//   }
+//   factory AWGTFSProvider.of(BuildContext context) {
+//     return context.read<AWGTFSProvider>();
 //   }
 //
 //   @override
